@@ -1,31 +1,47 @@
-import axios from 'axios';
+import { get } from 'https';
 
 export async function handler(event) {
-  const id = event.queryStringParameters.id || '';
+  const { type, id } = event.queryStringParameters;
+
+  if (!type || !id) {
+    return {
+      statusCode: 400,
+      body: `${!type ? 'type' : 'id'} required`,
+    };
+  }
 
   try {
-    const responses = await Promise.all([
-      axios.get(`https://news-at.zhihu.com/api/4/story/${id}/long-comments`),
-      axios.get(`https://news-at.zhihu.com/api/4/story/${id}/short-comments`),
-    ]);
+    let body = '';
+    const response = await new Promise((resolve, reject) => {
+      get(`https://news-at.zhihu.com/api/4/story/${id}/${type}-comments`, (res) => {
+        if (res.statusCode !== 200) {
+          res.resume();
+          reject(res);
+          return;
+        }
+
+        res.setEncoding('utf8');
+        res.on('error', reject);
+        res.on('end', () => {
+          resolve(res);
+        });
+        res.on('data', (chunk) => {
+          body += chunk;
+        });
+      }).on('error', reject);
+    });
 
     return {
-      statusCode: Math.max(responses[0].status, responses[1].status),
-      body: JSON.stringify({
-        comments: [...responses[0].data.comments, ...responses[1].data.comments],
-      }),
+      statusCode: response.statusCode,
+      headers: {
+        'content-type': response.headers['content-type'],
+      },
+      body,
     };
   } catch (error) {
-    if (error.response) {
-      return {
-        statusCode: error.response.status,
-        body: error.response.statusText,
-      };
-    }
-
     return {
-      statusCode: 422,
-      body: String(error),
+      statusCode: error.statusCode || 500,
+      body: error.statusMessage || error.message,
     };
   }
 }

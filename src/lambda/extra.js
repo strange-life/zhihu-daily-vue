@@ -1,26 +1,47 @@
-import axios from 'axios';
+import { get } from 'https';
 
 export async function handler(event) {
-  const id = event.queryStringParameters.id || '';
+  const { id } = event.queryStringParameters;
+
+  if (!id) {
+    return {
+      statusCode: 400,
+      body: 'id required',
+    };
+  }
 
   try {
-    const response = await axios.get(`https://news-at.zhihu.com/api/4/story-extra/${id}`);
+    let body = '';
+    const response = await new Promise((resolve, reject) => {
+      get(`https://news-at.zhihu.com/api/4/story-extra/${id}`, (res) => {
+        if (res.statusCode !== 200) {
+          res.resume();
+          reject(res);
+          return;
+        }
+
+        res.setEncoding('utf8');
+        res.on('error', reject);
+        res.on('end', () => {
+          resolve(res);
+        });
+        res.on('data', (chunk) => {
+          body += chunk;
+        });
+      }).on('error', reject);
+    });
 
     return {
-      statusCode: response.status,
-      body: JSON.stringify(response.data),
+      statusCode: response.statusCode,
+      headers: {
+        'content-type': response.headers['content-type'],
+      },
+      body,
     };
   } catch (error) {
-    if (error.response) {
-      return {
-        statusCode: error.response.status,
-        body: error.response.statusText,
-      };
-    }
-
     return {
-      statusCode: 422,
-      body: String(error),
+      statusCode: error.statusCode || 500,
+      body: error.statusMessage || error.message,
     };
   }
 }
