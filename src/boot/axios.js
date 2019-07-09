@@ -1,5 +1,7 @@
 import axios from 'axios';
 
-export default async ({ Vue }) => {
+axios.defaults.baseURL = '/.netlify/functions/';
+
+export default ({ Vue }) => {
   Vue.prototype.$axios = axios;
 };
