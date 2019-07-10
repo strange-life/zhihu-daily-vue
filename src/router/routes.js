@@ -1,5 +1,5 @@
 import Default from 'layouts/Default';
-import Index from 'pages/Index';
+import Index from 'pages/Index/Index';
 
 const routes = [
   {
