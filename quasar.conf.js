@@ -44,9 +44,11 @@ module.exports = function(ctx) {
         'QItemSection',
         'QItemLabel',
         'QPullToRefresh',
+        'QInfiniteScroll',
         'QCarousel',
         'QCarouselControl',
         'QCarouselSlide',
+        'QSpinnerDots',
       ],
 
       directives: ['Ripple'],

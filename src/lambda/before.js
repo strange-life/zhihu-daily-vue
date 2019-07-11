@@ -10,13 +10,6 @@ export async function handler(event) {
     };
   }
 
-  if (date < '20130520') {
-    return {
-      statusCode: 422,
-      body: 'invalid date',
-    };
-  }
-
   try {
     let body = '';
     const response = await new Promise((resolve, reject) => {

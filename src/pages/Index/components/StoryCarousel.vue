@@ -24,19 +24,20 @@
       </div>
     </q-carousel-slide>
 
-    <q-carousel-control
-      slot="control"
-      position="bottom"
-      :offset="[4, 4]"
-      class="flex justify-center items-center"
-    >
-      <div
-        v-for="story of props.stories"
-        :key="story.id"
-        :class="[story.id === props.value ? 'bg-grey-3' : 'bg-grey-5']"
-        class="q-mx-xs dot"
-      ></div>
-    </q-carousel-control>
+    <template v-slot:control>
+      <q-carousel-control
+        position="bottom"
+        :offset="[4, 4]"
+        class="flex justify-center items-center"
+      >
+        <div
+          v-for="story of props.stories"
+          :key="story.id"
+          :class="[story.id === props.value ? 'bg-grey-3' : 'bg-grey-5']"
+          class="q-mx-xs dot"
+        ></div>
+      </q-carousel-control>
+    </template>
   </q-carousel>
 </template>
 
