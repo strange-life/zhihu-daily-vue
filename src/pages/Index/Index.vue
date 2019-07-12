@@ -40,7 +40,7 @@ export default {
       news: [],
       currentDate: tomorrowText,
       tomorrow: tomorrowText,
-      dateReg: /(^\d{4})(\d{2})(\d{2})$/,
+      dateReg: /^(\d{4})(\d{2})(\d{2})$/,
       weekDays: [
         '星期日',
         '星期一',
