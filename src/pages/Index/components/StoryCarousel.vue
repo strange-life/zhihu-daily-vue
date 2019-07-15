@@ -18,7 +18,7 @@
       @click="listeners.detail(story.id)"
     >
       <div
-        class="absolute-bottom q-mb-md q-px-xs text-subtitle1 text-white caption"
+        class="absolute-bottom q-mb-md q-px-xs text-subtitle1 text-white bg-dimmed"
       >
         {{ story.title }}
       </div>
@@ -42,10 +42,6 @@
 </template>
 
 <style lang="stylus" scoped>
-.caption {
-  background-color: $dimmed-background;
-}
-
 .dot {
   width: 8px;
   height: 8px;

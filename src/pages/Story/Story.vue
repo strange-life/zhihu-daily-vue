@@ -1,6 +1,23 @@
 <template>
   <q-page>
-    <div id="story" v-html="story.body"></div>
+    <q-parallax :speed="0.3" :height="200">
+      <template v-slot:media>
+        <img
+          :src="story.image ? $utils.proxyImage(story.image) : ''"
+          :alt="story.title"
+          style="max-width:100%;"
+        />
+      </template>
+
+      <template v-slot:default>
+        <div class="absolute-bottom q-px-md q-py-xs bg-dimmed">
+          <div class="text-h6 text-white">{{ story.title }}</div>
+          <div class="text-grey-5 text-right">{{ story.image_source }}</div>
+        </div>
+      </template>
+    </q-parallax>
+
+    <article id="story" v-html="story.body"></article>
   </q-page>
 </template>
 
@@ -34,7 +51,7 @@ export default {
           '',
         );
         story.body = story.body.replace(
-          /<img(.*)src="(.*)"(.*)>/g,
+          /<img(.*?)src="(.*?)"(.*?)>/g,
           (match, p1, p2, p3) => `<img${p1}src="${this.$utils.proxyImage(p2)}"${p3}>`,
         );
 
