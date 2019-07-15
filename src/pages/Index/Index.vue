@@ -71,7 +71,7 @@ export default {
         } = await this.$axios.get('news');
 
         topStories.forEach((story) => {
-          story.image = this.proxyImageSrc(story.image);
+          story.image = this.$utils.proxyImage(story.image);
         });
 
         this.topStories = topStories;
@@ -95,21 +95,19 @@ export default {
         }`;
 
         stories.forEach((story) => {
-          story.image = this.proxyImageSrc(story.images[0]);
+          story.image = this.$utils.proxyImage(story.images[0]);
         });
         this.currentDate = date;
         this.$set(this.news, index - 1, { date, dateText, stories });
       } catch (error) {
+        done(true);
         this.$q.notify('获取新闻列表失败');
       } finally {
         done(this.currentDate < '20130520');
       }
     },
     getStory(id) {
-      console.log(`storyId: ${id}`);
-    },
-    proxyImageSrc(src) {
-      return `${window.location.origin}/.netlify/functions/images?src=${src}`;
+      this.$router.push({ name: 'story', params: { id } });
     },
   },
 };

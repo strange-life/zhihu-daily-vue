@@ -1,19 +1,23 @@
-import { get } from 'https';
+import { get as httpGet } from 'http';
+import { get as httpsGet } from 'https';
 
 export async function handler(event) {
-  const { src } = event.queryStringParameters;
+  const { url } = event.queryStringParameters;
 
-  if (!src) {
+  if (!url) {
     return {
       statusCode: 400,
-      body: 'src required',
+      body: 'url required',
     };
   }
 
+  const get = /^https/.test(url) ? httpsGet : httpGet;
+
   try {
     let body = '';
+
     const response = await new Promise((resolve, reject) => {
-      get(src, (res) => {
+      get(url, (res) => {
         if (res.statusCode !== 200) {
           res.resume();
           reject(res);
