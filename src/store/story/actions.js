@@ -15,3 +15,9 @@ export async function getStory({ commit }, id) {
 
   commit('setStory', story);
 }
+
+export async function getExtra({ commit }, id) {
+  const { data: extra } = await axios.get('extra', { params: { id } });
+
+  commit('setExtra', extra);
+}

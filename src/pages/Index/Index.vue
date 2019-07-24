@@ -22,7 +22,12 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import {
+  mapState,
+  mapGetters,
+  mapMutations,
+  mapActions,
+} from 'vuex';
 import StoryCarousel from './components/StoryCarousel';
 import StoryList from './components/StoryList';
 
@@ -31,6 +36,7 @@ export default {
   components: { StoryCarousel, StoryList },
   computed: {
     ...mapState('daily', ['topStories', 'currentStoryId', 'dailies']),
+    ...mapGetters('daily', ['currentDate']),
   },
   mounted() {
     this.getTopStories();
@@ -58,11 +64,10 @@ export default {
     async getDailies(index, done) {
       try {
         await this.getDailiesAction(index);
+        done(this.currentDate < '20130520');
       } catch (error) {
         done(true);
         this.$q.notify('获取新闻列表失败');
-      } finally {
-        done(this.currentDate < '20130520');
       }
     },
     getStory(id) {

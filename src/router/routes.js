@@ -20,7 +20,9 @@ export default [
           default(route) {
             return { id: Number(route.params.id) };
           },
-          navigation: false,
+          navigation(route) {
+            return { id: Number(route.params.id) };
+          },
         },
       },
     ],
