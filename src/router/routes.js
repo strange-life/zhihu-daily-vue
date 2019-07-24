@@ -4,7 +4,9 @@ import IndexNavigation from 'pages/Index/components/IndexNavigation';
 import Story from 'pages/Story/Story';
 import StoryNavigation from 'pages/Story/components/StoryNavigation';
 
-const routes = [
+const Error404 = () => import('pages/Error404');
+
+export default [
   {
     path: '/',
     component: Default,
@@ -23,14 +25,8 @@ const routes = [
       },
     ],
   },
-];
-
-// Always leave this as last one
-if (process.env.MODE !== 'ssr') {
-  routes.push({
+  {
     path: '*',
-    component: () => import('pages/Error404'),
-  });
-}
-
-export default routes;
+    component: Error404,
+  },
+];

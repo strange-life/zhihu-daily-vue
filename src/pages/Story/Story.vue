@@ -3,7 +3,7 @@
     <q-parallax :speed="0.3" :height="200">
       <template v-slot:media>
         <img
-          :src="story.image ? $utils.proxyImage(story.image) : ''"
+          :src="story.image || ''"
           :alt="story.title"
           style="max-width:100%;"
         />
@@ -18,10 +18,24 @@
     </q-parallax>
 
     <article id="story" v-html="story.body"></article>
+
+    <q-item v-if="story.section" clickable v-ripple class="q-mx-md">
+      <q-item-section thumbnail>
+        <img :src="story.section.thumbnail" style="width:auto;" />
+      </q-item-section>
+
+      <q-item-section>本文来自: {{ story.section.name }} • 合集</q-item-section>
+
+      <q-item-section side>
+        <q-icon name="arrow_forward_ios" />
+      </q-item-section>
+    </q-item>
   </q-page>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+
 export default {
   name: 'PageStory',
   props: {
@@ -30,36 +44,18 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      story: {},
-    };
+  computed: {
+    ...mapState('story', ['story']),
   },
-  mounted() {
-    this.getStory();
+  async mounted() {
+    try {
+      await this.getStory(this.id);
+    } catch (error) {
+      this.$q.notify('获取文章内容失败');
+    }
   },
   methods: {
-    async getStory() {
-      try {
-        const { data: story } = await this.$axios.get('news', {
-          params: { id: this.id },
-        });
-
-        story.body = story.body.replace(/<script.*<\/script>/g, '');
-        story.body = story.body.replace(
-          /<div class="img-place-holder"><\/div>/,
-          '',
-        );
-        story.body = story.body.replace(
-          /<img(.*?)src="(.*?)"(.*?)>/g,
-          (match, p1, p2, p3) => `<img${p1}src="${this.$utils.proxyImage(p2)}"${p3}>`,
-        );
-
-        this.story = story;
-      } catch (error) {
-        this.$q.notify('获取文章内容失败');
-      }
-    },
+    ...mapActions('story', ['getStory']),
   },
 };
 </script>
