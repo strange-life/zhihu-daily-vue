@@ -32,7 +32,7 @@ import StoryCarousel from './components/StoryCarousel';
 import StoryList from './components/StoryList';
 
 export default {
-  name: 'PageIndex',
+  name: 'PageHome',
   components: { StoryCarousel, StoryList },
   computed: {
     ...mapState('daily', ['topStories', 'currentStoryId', 'dailies']),

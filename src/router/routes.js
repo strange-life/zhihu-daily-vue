@@ -1,8 +1,6 @@
 import Default from 'layouts/Default';
-import Index from 'pages/Index/Index';
-import IndexNavigation from 'pages/Index/components/IndexNavigation';
-import Story from 'pages/Story/Story';
-import StoryNavigation from 'pages/Story/components/StoryNavigation';
+import { Home, HomeNavigation } from 'pages/Home';
+import { Story, StoryNavigation } from 'pages/Story';
 
 const Error404 = () => import('pages/Error404');
 
@@ -11,7 +9,7 @@ export default [
     path: '/',
     component: Default,
     children: [
-      { path: '', name: 'index', components: { default: Index, navigation: IndexNavigation } },
+      { path: '', name: 'index', components: { default: Home, navigation: HomeNavigation } },
       {
         path: '/story/:id',
         name: 'story',

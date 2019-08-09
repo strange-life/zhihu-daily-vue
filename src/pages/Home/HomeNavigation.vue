@@ -37,7 +37,7 @@
 
 <script>
 export default {
-  name: 'IndexNavigation',
+  name: 'HomeNavigation',
   data() {
     return {
       leftDrawerOpen: this.$q.platform.is.desktop,
