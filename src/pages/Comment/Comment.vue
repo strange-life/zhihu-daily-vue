@@ -38,7 +38,7 @@ export default {
       const hours = date.getHours();
       const minutes = date.getMinutes();
 
-      return `${month}-${day} ${hours}:${minutes}`;
+      return `${String(month).padStart(2, '0')}-${day} ${hours}:${minutes}`;
     },
   },
   props: {
