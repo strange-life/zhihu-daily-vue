@@ -34,8 +34,17 @@ export default {
     ...mapState('home', ['topStories', 'currentStoryId', 'dailies']),
     ...mapGetters('home', ['currentDate']),
   },
-  mounted() {
-    this.getTopStories();
+  async mounted() {
+    if (!this.topStories.length) {
+      this.$q.loading.show();
+      try {
+        await this.getTopStories();
+      } catch (error) {
+        this.$q.notify('获取轮播日报失败');
+      } finally {
+        this.$q.loading.hide();
+      }
+    }
   },
   methods: {
     ...mapMutations('home', ['setCurrentStoryId', 'setDailies']),

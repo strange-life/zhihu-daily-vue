@@ -51,10 +51,13 @@ export default {
     ...mapState('comment', ['comments']),
   },
   async mounted() {
+    this.$q.loading.show();
     try {
       await this.getComments(this.id);
     } catch (error) {
       this.$q.notify('获取评论失败');
+    } finally {
+      this.$q.loading.hide();
     }
   },
   beforeDestroy() {

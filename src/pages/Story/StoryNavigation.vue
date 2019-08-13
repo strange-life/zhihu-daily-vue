@@ -3,14 +3,14 @@
     <q-toolbar>
       <q-btn flat dense round icon="arrow_back" @click="$router.back()" />
       <q-space />
-      <q-btn flat dense icon="comment" :label="extra.comments" @click="goComment" />
-      <q-btn flat dense icon="thumb_up_alt" :label="extra.popularity" />
+      <q-btn flat dense icon="comment" :label="extra.comments || '...'" @click="goComment" />
+      <q-btn flat dense icon="thumb_up_alt" :label="extra.popularity || '...'" />
     </q-toolbar>
   </q-header>
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 
 export default {
   name: 'StoryNavigation',
@@ -23,13 +23,6 @@ export default {
   computed: {
     ...mapState('story', ['extra']),
   },
-  beforeRouteLeave(to, from, next) {
-    if (to.name === 'home') {
-      this.setExtra({});
-    }
-
-    next();
-  },
   async mounted() {
     try {
       await this.getExtra(this.id);
@@ -38,7 +31,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('story', ['setExtra']),
     ...mapActions('story', ['getExtra']),
     goComment() {
       this.$router.push({ name: 'comment', params: { id: this.id } });

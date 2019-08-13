@@ -43,18 +43,17 @@ export default {
   computed: {
     ...mapState('story', ['story']),
   },
-  beforeRouteLeave(to, from, next) {
-    if (to.name === 'home') {
-      this.setStory({});
-    }
-
-    next();
-  },
   async mounted() {
-    try {
-      await this.getStory(this.id);
-    } catch (error) {
-      this.$q.notify('获取文章内容失败');
+    if (this.id !== this.story.id) {
+      this.$q.loading.show();
+      this.setStory({});
+      try {
+        await this.getStory(this.id);
+      } catch (error) {
+        this.$q.notify('获取文章内容失败');
+      } finally {
+        this.$q.loading.hide();
+      }
     }
   },
   methods: {
