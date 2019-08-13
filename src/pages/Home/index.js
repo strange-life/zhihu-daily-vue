@@ -1,4 +1,5 @@
 import Home from './Home';
 import HomeNavigation from './HomeNavigation';
+import HomeModule from './store';
 
-export { Home, HomeNavigation };
+export { Home, HomeNavigation, HomeModule };
