@@ -11,9 +11,7 @@
           aria-label="Menu"
         />
 
-        <q-toolbar-title>
-          首页
-        </q-toolbar-title>
+        <q-toolbar-title>首页</q-toolbar-title>
       </q-toolbar>
     </q-header>
 

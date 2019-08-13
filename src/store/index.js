@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import daily from './daily';
+import home from './home';
 import story from './story';
 
 Vue.use(Vuex);
@@ -11,5 +11,5 @@ export default new Vuex.Store({
   // for dev mode only
   strict: process.env.DEV,
 
-  modules: { daily, story },
+  modules: { home, story },
 });

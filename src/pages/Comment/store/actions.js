@@ -1,0 +1,14 @@
+import { axios } from 'boot/axios';
+import { proxyImage } from 'src/utils';
+
+export async function getComments({ commit }, id) {
+  const {
+    data: { comments },
+  } = await axios.get('comment', { params: { id } });
+
+  comments.forEach((comment) => {
+    comment.avatar = proxyImage(comment.avatar);
+  });
+
+  commit('setComments', comments);
+}

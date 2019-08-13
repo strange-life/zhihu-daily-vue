@@ -2,11 +2,7 @@
   <q-page>
     <q-parallax :speed="0.3" :height="200">
       <template v-slot:media>
-        <img
-          :src="story.image || ''"
-          :alt="story.title"
-          style="max-width:100%;"
-        />
+        <img :src="story.image" :alt="story.title" style="max-width:100%;" />
       </template>
 
       <template v-slot:default>

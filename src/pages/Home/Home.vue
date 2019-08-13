@@ -6,10 +6,10 @@
           :value="currentStoryId"
           @input="setCurrentStoryId"
           :stories="topStories"
-          @detail="getStory"
+          @detail="goStory"
         />
 
-        <story-list :dailies="dailies" @detail="getStory" />
+        <story-list :dailies="dailies" @detail="goStory" />
       </q-page>
 
       <template v-slot:loading>
@@ -22,12 +22,8 @@
 </template>
 
 <script>
-import {
-  mapState,
-  mapGetters,
-  mapMutations,
-  mapActions,
-} from 'vuex';
+// eslint-disable-next-line
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import StoryCarousel from './components/StoryCarousel';
 import StoryList from './components/StoryList';
 
@@ -35,15 +31,15 @@ export default {
   name: 'PageHome',
   components: { StoryCarousel, StoryList },
   computed: {
-    ...mapState('daily', ['topStories', 'currentStoryId', 'dailies']),
-    ...mapGetters('daily', ['currentDate']),
+    ...mapState('home', ['topStories', 'currentStoryId', 'dailies']),
+    ...mapGetters('home', ['currentDate']),
   },
   mounted() {
     this.getTopStories();
   },
   methods: {
-    ...mapMutations('daily', ['setCurrentStoryId', 'setDailies']),
-    ...mapActions('daily', {
+    ...mapMutations('home', ['setCurrentStoryId', 'setDailies']),
+    ...mapActions('home', {
       getTopStoriesAction: 'getTopStories',
       getDailiesAction: 'getDailies',
     }),
@@ -70,7 +66,7 @@ export default {
         this.$q.notify('获取新闻列表失败');
       }
     },
-    getStory(id) {
+    goStory(id) {
       this.$router.push({ name: 'story', params: { id } });
     },
   },

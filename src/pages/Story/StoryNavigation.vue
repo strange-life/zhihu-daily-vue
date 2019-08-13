@@ -3,7 +3,7 @@
     <q-toolbar>
       <q-btn flat dense round icon="arrow_back" @click="$router.back()" />
       <q-space />
-      <q-btn flat dense icon="comment" :label="extra.comments" />
+      <q-btn flat dense icon="comment" :label="extra.comments" @click="goComment" />
       <q-btn flat dense icon="thumb_up_alt" :label="extra.popularity" />
     </q-toolbar>
   </q-header>
@@ -32,6 +32,9 @@ export default {
   },
   methods: {
     ...mapActions('story', ['getExtra']),
+    goComment() {
+      this.$router.push({ name: 'comment', params: { id: this.id } });
+    },
   },
 };
 </script>

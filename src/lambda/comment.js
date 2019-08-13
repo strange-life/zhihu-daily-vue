@@ -1,42 +1,52 @@
 import { get } from 'https';
 
-export async function handler(event) {
-  const { type, id } = event.queryStringParameters;
+const types = ['long', 'short'];
 
-  if (!type || !id) {
+function getComments({ id, type }) {
+  return new Promise((resolve, reject) => {
+    get(`https://news-at.zhihu.com/api/4/story/${id}/${type}-comments`, (response) => {
+      if (response.statusCode !== 200) {
+        response.resume();
+        reject(response);
+        return;
+      }
+      let data = '';
+
+      response.setEncoding('utf8');
+      response.on('error', reject);
+      response.on('end', () => {
+        resolve({ response, data: JSON.parse(data) });
+      });
+      response.on('data', (chunk) => {
+        data += chunk;
+      });
+    }).on('error', reject);
+  });
+}
+
+export async function handler(event) {
+  const { id } = event.queryStringParameters;
+
+  if (!id) {
     return {
       statusCode: 400,
-      body: `${!type ? 'type' : 'id'} required`,
+      body: 'id required',
     };
   }
 
   try {
-    let body = '';
-    const response = await new Promise((resolve, reject) => {
-      get(`https://news-at.zhihu.com/api/4/story/${id}/${type}-comments`, (res) => {
-        if (res.statusCode !== 200) {
-          res.resume();
-          reject(res);
-          return;
-        }
+    const [{ response, data: longComments }, { data: shortComments }] = await Promise.all(
+      types.map(type => getComments({ id, type })),
+    );
 
-        res.setEncoding('utf8');
-        res.on('error', reject);
-        res.on('end', () => {
-          resolve(res);
-        });
-        res.on('data', (chunk) => {
-          body += chunk;
-        });
-      }).on('error', reject);
-    });
+    longComments.comments.push(...shortComments.comments);
 
     return {
       statusCode: response.statusCode,
       headers: {
         'content-type': response.headers['content-type'],
       },
-      body,
+      body: JSON.stringify(longComments),
     };
   } catch (error) {
     return {

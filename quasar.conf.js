@@ -43,6 +43,7 @@ module.exports = function(ctx) {
         'QItem',
         'QItemSection',
         'QItemLabel',
+        'QAvatar',
         'QSpace',
         'QPullToRefresh',
         'QInfiniteScroll',
