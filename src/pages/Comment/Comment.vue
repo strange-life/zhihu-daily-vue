@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'PageComment',
@@ -50,10 +50,18 @@ export default {
   computed: {
     ...mapState('comment', ['comments']),
   },
-  mounted() {
-    this.getComments(this.id);
+  async mounted() {
+    try {
+      await this.getComments(this.id);
+    } catch (error) {
+      this.$q.notify('获取评论失败');
+    }
+  },
+  beforeDestroy() {
+    this.setComments([]);
   },
   methods: {
+    ...mapMutations('comment', ['setComments']),
     ...mapActions('comment', ['getComments']),
   },
 };

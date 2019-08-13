@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'PageStory',
@@ -43,6 +43,13 @@ export default {
   computed: {
     ...mapState('story', ['story']),
   },
+  beforeRouteLeave(to, from, next) {
+    if (to.name === 'home') {
+      this.setStory({});
+    }
+
+    next();
+  },
   async mounted() {
     try {
       await this.getStory(this.id);
@@ -51,6 +58,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('story', ['setStory']),
     ...mapActions('story', ['getStory']),
   },
 };

@@ -11,7 +11,7 @@ export default [
     path: '/',
     component: Default,
     children: [
-      { path: '', name: 'index', components: { default: Home, navigation: HomeNavigation } },
+      { path: '', name: 'home', components: { default: Home, navigation: HomeNavigation } },
       {
         path: '/story/:id',
         name: 'story',

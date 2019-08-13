@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'StoryNavigation',
@@ -23,6 +23,13 @@ export default {
   computed: {
     ...mapState('story', ['extra']),
   },
+  beforeRouteLeave(to, from, next) {
+    if (to.name === 'home') {
+      this.setExtra({});
+    }
+
+    next();
+  },
   async mounted() {
     try {
       await this.getExtra(this.id);
@@ -31,6 +38,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations('story', ['setExtra']),
     ...mapActions('story', ['getExtra']),
     goComment() {
       this.$router.push({ name: 'comment', params: { id: this.id } });

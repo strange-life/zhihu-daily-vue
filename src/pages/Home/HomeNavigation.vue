@@ -19,7 +19,7 @@
       <q-list>
         <q-item-label header>知乎日报</q-item-label>
 
-        <q-item :to="{ name: 'index' }" clickable v-ripple>
+        <q-item :to="{ name: 'home' }" clickable v-ripple>
           <q-item-section avatar>
             <q-icon name="home" />
           </q-item-section>
