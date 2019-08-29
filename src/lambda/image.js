@@ -14,8 +14,8 @@ export async function handler(event) {
   const get = /^https/.test(url) ? httpsGet : httpGet;
 
   try {
-    let body = '';
-
+    const bufferList = [];
+    let totalLength = 0;
     const response = await new Promise((resolve, reject) => {
       get(url, (res) => {
         if (res.statusCode !== 200) {
@@ -24,13 +24,11 @@ export async function handler(event) {
           return;
         }
 
-        res.setEncoding('base64');
         res.on('error', reject);
-        res.on('end', () => {
-          resolve(res);
-        });
+        res.on('end', () => { resolve(res); });
         res.on('data', (chunk) => {
-          body += chunk;
+          bufferList.push(chunk);
+          totalLength += chunk.length;
         });
       }).on('error', reject);
     });
@@ -41,7 +39,7 @@ export async function handler(event) {
         'content-type': response.headers['content-type'],
       },
       isBase64Encoded: true,
-      body,
+      body: Buffer.concat(bufferList, totalLength).toString('base64'),
     };
   } catch (error) {
     return {

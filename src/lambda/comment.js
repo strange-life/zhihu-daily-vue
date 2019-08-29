@@ -10,15 +10,17 @@ function getComments({ id, type }) {
         reject(response);
         return;
       }
-      let data = '';
 
-      response.setEncoding('utf8');
+      const bufferList = [];
+      let totalLength = 0;
+
       response.on('error', reject);
       response.on('end', () => {
-        resolve({ response, data: JSON.parse(data) });
+        resolve({ response, data: JSON.parse(Buffer.concat(bufferList, totalLength).toString()) });
       });
       response.on('data', (chunk) => {
-        data += chunk;
+        bufferList.push(chunk);
+        totalLength += chunk.length;
       });
     }).on('error', reject);
   });
