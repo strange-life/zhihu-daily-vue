@@ -14,7 +14,6 @@ export async function handler(event) {
           return;
         }
 
-        res.on('error', reject);
         res.on('end', () => { resolve(res); });
         res.on('data', (chunk) => {
           bufferList.push(chunk);

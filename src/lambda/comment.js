@@ -14,7 +14,6 @@ function getComments({ id, type }) {
       const bufferList = [];
       let totalLength = 0;
 
-      response.on('error', reject);
       response.on('end', () => {
         resolve({ response, data: JSON.parse(Buffer.concat(bufferList, totalLength).toString()) });
       });
