@@ -1,9 +1,10 @@
 import { get } from 'https';
 
-const regPath = /^\/extra\/(\d+)$/;
+const regNumber = /^\d+$/;
+const regPath = /^\/section(?:\/(\d+))?$/;
 
 export async function handler(event) {
-  const { path } = event;
+  const { path, queryStringParameters: { before } } = event;
 
   if (!regPath.test(path)) {
     return {
@@ -13,12 +14,23 @@ export async function handler(event) {
   }
 
   const id = regPath.exec(path)[1];
+  let url = '';
+
+  if (id) {
+    url = `https://news-at.zhihu.com/api/4/section/${id}`;
+
+    if (regNumber.test(before)) {
+      url += `/before/${before}`;
+    }
+  } else {
+    url = 'https://news-at.zhihu.com/api/4/sections';
+  }
 
   try {
     const bufferList = [];
     let totalLength = 0;
     const response = await new Promise((resolve, reject) => {
-      get(`https://news-at.zhihu.com/api/4/story-extra/${id}`, (res) => {
+      get(url, (res) => {
         if (res.statusCode !== 200) {
           res.resume();
           reject(res);

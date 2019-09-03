@@ -1,10 +1,18 @@
 import { get } from 'https';
 
-const regParam = /^\/news\/(\d+)$/;
+const regPath = /^\/news(?:\/(\d+))?$/;
 
 export async function handler(event) {
   const { path } = event;
-  const id = regParam.test(path) ? regParam.exec(path)[1] : 'latest';
+
+  if (!regPath.test(path)) {
+    return {
+      statusCode: 404,
+      body: 'Not Found',
+    };
+  }
+
+  const id = regPath.exec(path)[1] || 'latest';
 
   try {
     const bufferList = [];
