@@ -4,7 +4,7 @@ import { proxyImage, parseDate } from 'src/utils';
 export async function getTopStories({ commit }) {
   const {
     data: { top_stories: topStories },
-  } = await axios.get('news');
+  } = await axios.get('/news');
 
   topStories.forEach((story) => {
     story.image = proxyImage(story.image);
@@ -17,7 +17,7 @@ export async function getTopStories({ commit }) {
 export async function getDailies({ getters, commit }, index) {
   const {
     data: { date, stories },
-  } = await axios.get('before', {
+  } = await axios.get('/before', {
     params: {
       date: getters.currentDate,
     },

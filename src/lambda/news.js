@@ -1,7 +1,10 @@
 import { get } from 'https';
 
+const regParam = /^\/news\/(\d+)$/;
+
 export async function handler(event) {
-  const id = event.queryStringParameters.id || 'latest';
+  const { path } = event;
+  const id = regParam.test(path) ? regParam.exec(path)[1] : 'latest';
 
   try {
     const bufferList = [];

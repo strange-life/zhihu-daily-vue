@@ -2,7 +2,7 @@ import { axios } from 'boot/axios';
 import { proxyImage } from 'src/utils';
 
 export async function getStory({ commit }, id) {
-  const { data: story } = await axios.get('news', { params: { id } });
+  const { data: story } = await axios.get(`/news/${id}`);
 
   story.image = proxyImage(story.image);
   story.body = story.body.replace(/<script.*<\/script>/g, '');
@@ -17,7 +17,7 @@ export async function getStory({ commit }, id) {
 }
 
 export async function getExtra({ commit }, id) {
-  const { data: extra } = await axios.get('extra', { params: { id } });
+  const { data: extra } = await axios.get(`/extra/${id}`);
 
   commit('setExtra', extra);
 }

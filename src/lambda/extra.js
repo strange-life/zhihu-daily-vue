@@ -1,14 +1,18 @@
 import { get } from 'https';
 
-export async function handler(event) {
-  const { id } = event.queryStringParameters;
+const regParam = /^\/extra\/(\d+)$/;
 
-  if (!id) {
+export async function handler(event) {
+  const { path } = event;
+
+  if (!regParam.test(path)) {
     return {
-      statusCode: 400,
-      body: 'id required',
+      statusCode: 404,
+      body: 'Not Found',
     };
   }
+
+  const id = regParam.exec(path)[1];
 
   try {
     const bufferList = [];

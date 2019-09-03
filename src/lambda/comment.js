@@ -1,6 +1,7 @@
 import { get } from 'https';
 
 const types = ['long', 'short'];
+const regParam = /^\/comment\/(\d+)$/;
 
 function getComments({ id, type }) {
   return new Promise((resolve, reject) => {
@@ -26,14 +27,16 @@ function getComments({ id, type }) {
 }
 
 export async function handler(event) {
-  const { id } = event.queryStringParameters;
+  const { path } = event;
 
-  if (!id) {
+  if (!regParam.test(path)) {
     return {
-      statusCode: 400,
-      body: 'id required',
+      statusCode: 404,
+      body: 'Not Found',
     };
   }
+
+  const id = regParam.exec(path)[1];
 
   try {
     const [{ response, data: longComments }, { data: shortComments }] = await Promise.all(
