@@ -5,24 +5,31 @@ const regPath = /^\/comment\/(\d+)$/;
 
 function getComments({ id, type }) {
   return new Promise((resolve, reject) => {
-    get(`https://news-at.zhihu.com/api/4/story/${id}/${type}-comments`, (response) => {
-      if (response.statusCode !== 200) {
-        response.resume();
-        reject(response);
-        return;
-      }
+    get(
+      `https://news-at.zhihu.com/api/4/story/${id}/${type}-comments`,
+      (response) => {
+        if (response.statusCode !== 200) {
+          response.resume();
+          reject(response);
+          return;
+        }
 
-      const bufferList = [];
-      let totalLength = 0;
+        const bufferList = [];
+        let totalLength = 0;
 
-      response.on('end', () => {
-        resolve({ response, data: JSON.parse(Buffer.concat(bufferList, totalLength).toString()) });
-      });
-      response.on('data', (chunk) => {
-        bufferList.push(chunk);
-        totalLength += chunk.length;
-      });
-    }).on('error', reject);
+        response.on('end', () => {
+          resolve({
+            response,
+            data: JSON.parse(Buffer.concat(bufferList, totalLength).toString()),
+          });
+        });
+
+        response.on('data', (chunk) => {
+          bufferList.push(chunk);
+          totalLength += chunk.length;
+        });
+      },
+    ).on('error', reject);
   });
 }
 
@@ -39,9 +46,10 @@ export async function handler(event) {
   const id = regPath.exec(path)[1];
 
   try {
-    const [{ response, data: longComments }, { data: shortComments }] = await Promise.all(
-      types.map(type => getComments({ id, type })),
-    );
+    const [
+      { response, data: longComments },
+      { data: shortComments },
+    ] = await Promise.all(types.map(type => getComments({ id, type })));
 
     longComments.comments.push(...shortComments.comments);
 

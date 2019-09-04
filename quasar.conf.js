@@ -2,8 +2,8 @@
 // https://quasar.dev/quasar-cli/quasar-conf-js
 const eslint = require('eslint');
 
-// eslint-disable-next-line
-module.exports = function(ctx) {
+// eslint-disable-next-line no-unused-vars
+module.exports = function config(ctx) {
   return {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"

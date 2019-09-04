@@ -12,6 +12,9 @@ export default new VueRouter({
   mode: process.env.VUE_ROUTER_MODE,
   base: process.env.VUE_ROUTER_BASE,
 
-  scrollBehavior: () => ({ x: 0, y: 0 }),
+  // eslint-disable-next-line no-unused-vars
+  scrollBehavior(to, from, savedPosition) {
+    return { x: 0, y: 0 };
+  },
   routes,
 });

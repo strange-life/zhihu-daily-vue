@@ -19,9 +19,7 @@
     >
       <div
         class="absolute-bottom q-mb-md q-px-xs text-subtitle1 text-white bg-dimmed"
-      >
-        {{ story.title }}
-      </div>
+      >{{ story.title }}</div>
     </q-carousel-slide>
 
     <template v-slot:control>

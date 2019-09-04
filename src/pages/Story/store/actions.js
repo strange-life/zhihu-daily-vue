@@ -1,4 +1,4 @@
-import { axios } from 'boot/axios';
+import axios from 'axios';
 import { proxyImage } from 'src/utils';
 
 export async function getStory({ commit }, id) {
@@ -11,7 +11,10 @@ export async function getStory({ commit }, id) {
     /<img(.*?)src="(.*?)"(.*?)>/g,
     (_, p1, p2, p3) => `<img${p1}src="${proxyImage(p2)}"${p3}>`,
   );
-  if (story.section) story.section.thumbnail = proxyImage(story.section.thumbnail);
+
+  if (story.section) {
+    story.section.thumbnail = proxyImage(story.section.thumbnail);
+  }
 
   commit('setStory', story);
 }

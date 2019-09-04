@@ -11,7 +11,11 @@ export default [
     path: '/',
     component: Default,
     children: [
-      { path: '', name: 'home', components: { default: Home, navigation: HomeNavigation } },
+      {
+        path: '',
+        name: 'home',
+        components: { default: Home, navigation: HomeNavigation },
+      },
       {
         path: '/story/:id',
         name: 'story',
@@ -38,14 +42,11 @@ export default [
           },
         },
         async beforeEnter(to, from, next) {
-          if (store.state.comment) {
-            next();
-          } else {
-            const { default: comment } = await CommentModule();
-
-            store.registerModule('comment', comment);
-            next();
+          if (!store.state.comment) {
+            store.registerModule('comment', (await CommentModule()).default);
           }
+
+          next();
         },
       },
     ],

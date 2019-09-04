@@ -1,4 +1,4 @@
-import { axios } from 'boot/axios';
+import axios from 'axios';
 import { proxyImage, parseDate } from 'src/utils';
 
 export async function getTopStories({ commit }) {

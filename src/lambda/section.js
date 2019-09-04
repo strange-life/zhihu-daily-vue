@@ -4,7 +4,10 @@ const regNumber = /^\d+$/;
 const regPath = /^\/section(?:\/(\d+))?$/;
 
 export async function handler(event) {
-  const { path, queryStringParameters: { before } } = event;
+  const {
+    path,
+    queryStringParameters: { before },
+  } = event;
 
   if (!regPath.test(path)) {
     return {
@@ -37,7 +40,10 @@ export async function handler(event) {
           return;
         }
 
-        res.on('end', () => { resolve(res); });
+        res.on('end', () => {
+          resolve(res);
+        });
+
         res.on('data', (chunk) => {
           bufferList.push(chunk);
           totalLength += chunk.length;
