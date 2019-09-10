@@ -1,35 +1,109 @@
 <template>
-  <q-pull-to-refresh @refresh="refresh">
-    <q-infinite-scroll :offset="30" ref="infiniteScroll" @load="getDailies">
-      <q-page>
-        <story-carousel
-          :value="currentStoryId"
-          @input="setCurrentStoryId"
-          :stories="topStories"
-          @detail="goStory"
-        />
+  <layout-default>
+    <template #header>
+      <q-toolbar>
+        <q-btn flat dense round icon="menu" @click="drawerActive = true" aria-label="Menu" />
 
-        <story-list :dailies="dailies" @detail="goStory" />
-      </q-page>
+        <q-toolbar-title>首页</q-toolbar-title>
+      </q-toolbar>
+    </template>
 
-      <template v-slot:loading>
-        <div class="flex justify-center">
-          <q-spinner-dots color="primary" size="40px" />
-        </div>
-      </template>
-    </q-infinite-scroll>
-  </q-pull-to-refresh>
+    <q-pull-to-refresh @refresh="refresh">
+      <q-drawer v-model="drawerActive" bordered>
+        <q-list>
+          <q-item-label header>知乎日报</q-item-label>
+
+          <q-item :to="{ name: 'home' }" @click.native="drawerActive = false">
+            <q-item-section avatar class="items-center">
+              <q-icon name="home" />
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label>首页</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
+      </q-drawer>
+
+      <q-carousel
+        :value="currentStoryId"
+        @input="setCurrentStoryId"
+        animated
+        infinite
+        swipeable
+        transition-prev="slide-right"
+        transition-next="slide-left"
+        autoplay
+        height="200px"
+      >
+        <q-carousel-slide
+          v-for="story of topStories"
+          :key="story.id"
+          :name="story.id"
+          :img-src="story.image"
+          @click="goStory(story.id)"
+        >
+          <div
+            class="absolute-bottom q-mb-md q-px-xs text-subtitle1 text-white bg-dimmed"
+          >{{ story.title }}</div>
+        </q-carousel-slide>
+
+        <template #control>
+          <q-carousel-control
+            position="bottom"
+            :offset="[4, 4]"
+            class="flex justify-center items-center"
+          >
+            <div
+              v-for="story of topStories"
+              :key="story.id"
+              :class="[$style.dot, story.id === currentStoryId ? 'bg-grey-3' : 'bg-grey-5']"
+              class="q-mx-xs"
+            ></div>
+          </q-carousel-control>
+        </template>
+      </q-carousel>
+
+      <q-infinite-scroll :offset="30" ref="infiniteScroll" @load="getDailies">
+        <q-list padding class="q-mx-md">
+          <template v-for="daily of dailies">
+            <q-item-label :key="daily.date" header>{{ daily.dateText }}</q-item-label>
+
+            <q-item
+              v-for="story of daily.stories"
+              :key="story.id"
+              :to="{ name: 'story', params: { id: story.id } }"
+            >
+              <q-item-section thumbnail>
+                <img :src="story.image" style="width:auto;" />
+              </q-item-section>
+
+              <q-item-section>{{ story.title }}</q-item-section>
+            </q-item>
+          </template>
+        </q-list>
+
+        <template #loading>
+          <div class="flex justify-center">
+            <q-spinner-dots color="primary" size="40px" />
+          </div>
+        </template>
+      </q-infinite-scroll>
+    </q-pull-to-refresh>
+  </layout-default>
 </template>
 
 <script>
 // eslint-disable-next-line
 import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
-import StoryCarousel from './components/StoryCarousel';
-import StoryList from './components/StoryList';
 
 export default {
   name: 'PageHome',
-  components: { StoryCarousel, StoryList },
+  data() {
+    return {
+      drawerActive: this.$q.platform.is.desktop,
+    };
+  },
   computed: {
     ...mapState('home', ['topStories', 'currentStoryId', 'dailies']),
     ...mapGetters('home', ['currentDate']),
@@ -81,3 +155,11 @@ export default {
   },
 };
 </script>
+
+<style lang="stylus" module>
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+</style>

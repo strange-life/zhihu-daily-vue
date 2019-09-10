@@ -1,11 +1,5 @@
-<template>
+<template functional>
   <div id="q-app">
     <router-view />
   </div>
 </template>
-
-<script>
-export default {
-  name: 'App',
-};
-</script>

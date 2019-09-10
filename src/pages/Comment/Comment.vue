@@ -1,5 +1,12 @@
 <template>
-  <q-page>
+  <layout-default>
+    <template #header>
+      <q-toolbar>
+        <q-btn flat dense round icon="arrow_back" @click="$router.back()" />
+        <q-toolbar-title style="font-size: 16px;">{{ comments.length }}条点评</q-toolbar-title>
+      </q-toolbar>
+    </template>
+
     <q-list>
       <q-item v-for="comment of comments" :key="comment.id">
         <q-item-section top avatar>
@@ -22,11 +29,12 @@
         </q-item-section>
       </q-item>
     </q-list>
-  </q-page>
+  </layout-default>
 </template>
 
 <script>
 import { mapState, mapMutations, mapActions } from 'vuex';
+import CommentModule from './store';
 
 export default {
   name: 'PageComment',
@@ -50,6 +58,9 @@ export default {
   computed: {
     ...mapState('comment', ['comments']),
   },
+  beforeCreate() {
+    this.$store.registerModule('comment', CommentModule);
+  },
   async mounted() {
     this.$q.loading.show();
     try {
@@ -60,8 +71,9 @@ export default {
       this.$q.loading.hide();
     }
   },
-  beforeDestroy() {
+  destroyed() {
     this.setComments([]);
+    this.$store.unregisterModule('comment');
   },
   methods: {
     ...mapMutations('comment', ['setComments']),

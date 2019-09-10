@@ -1,16 +1,29 @@
 <template>
-  <q-page>
+  <layout-default>
+    <template #header>
+      <q-toolbar>
+        <q-btn flat dense round icon="arrow_back" @click="$router.back()" />
+        <q-space />
+        <q-btn
+          flat
+          dense
+          icon="comment"
+          :label="extra.comments || '...'"
+          :to="{ name: 'comment', params: { id } }"
+        />
+        <q-btn flat dense icon="thumb_up_alt" :label="extra.popularity || '...'" />
+      </q-toolbar>
+    </template>
+
     <q-parallax :speed="0.3" :height="200">
-      <template v-slot:media>
+      <template #media>
         <img :src="story.image" :alt="story.title" style="max-width:100%;" />
       </template>
 
-      <template v-slot:default>
-        <div class="absolute-bottom q-px-md q-py-xs bg-dimmed">
-          <div class="text-h6 text-white">{{ story.title }}</div>
-          <div class="text-grey-5 text-right">{{ story.image_source }}</div>
-        </div>
-      </template>
+      <div class="absolute-bottom q-px-md q-py-xs bg-dimmed">
+        <div class="text-h6 text-white">{{ story.title }}</div>
+        <div class="text-grey-5 text-right">{{ story.image_source }}</div>
+      </div>
     </q-parallax>
 
     <article id="story" v-html="story.body"></article>
@@ -26,7 +39,7 @@
         <q-icon name="arrow_forward_ios" />
       </q-item-section>
     </q-item>
-  </q-page>
+  </layout-default>
 </template>
 
 <script>
@@ -41,24 +54,30 @@ export default {
     },
   },
   computed: {
-    ...mapState('story', ['story']),
+    ...mapState('story', ['story', 'extra']),
   },
   async mounted() {
+    this.getExtra(this.id);
+
     if (this.id !== this.story.id) {
       this.$q.loading.show();
       this.setStory({});
+
       try {
         await this.getStory(this.id);
       } catch (error) {
-        this.$q.notify('获取文章内容失败');
+        this.$q.notify('获取文章失败');
       } finally {
         this.$q.loading.hide();
       }
     }
   },
+  destroyed() {
+    this.setExtra({});
+  },
   methods: {
-    ...mapMutations('story', ['setStory']),
-    ...mapActions('story', ['getStory']),
+    ...mapMutations('story', ['setStory', 'setExtra']),
+    ...mapActions('story', ['getStory', 'getExtra']),
   },
 };
 </script>
