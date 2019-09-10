@@ -87,10 +87,7 @@ module.exports = function config(ctx) {
       // port: 8080,
       open: false, // opens browser window automatically
       proxy: {
-        '/.netlify': {
-          target: 'http://localhost:9000',
-          pathRewrite: { '^/.netlify/functions': '' },
-        },
+        '/.netlify/functions': 'http://localhost:9000',
       },
     },
 

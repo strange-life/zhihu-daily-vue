@@ -1,6 +1,6 @@
 import { get } from 'https';
 
-const regPath = /^\/news(?:\/(\d+))?$/;
+const regPath = /\/news(?:\/(\d+))?$/;
 
 export async function handler(event) {
   const { path } = event;

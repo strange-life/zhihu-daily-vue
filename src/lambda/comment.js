@@ -1,7 +1,7 @@
 import { get } from 'https';
 
 const types = ['long', 'short'];
-const regPath = /^\/comment\/(\d+)$/;
+const regPath = /\/comment\/(\d+)$/;
 
 function getComments({ id, type }) {
   return new Promise((resolve, reject) => {

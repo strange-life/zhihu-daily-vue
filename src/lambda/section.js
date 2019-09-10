@@ -1,7 +1,7 @@
 import { get } from 'https';
 
 const regNumber = /^\d+$/;
-const regPath = /^\/section(?:\/(\d+))?$/;
+const regPath = /\/section(?:\/(\d+))?$/;
 
 export async function handler(event) {
   const {
